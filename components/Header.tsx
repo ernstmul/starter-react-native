@@ -91,7 +91,7 @@ export const Header = ({ state, pingFunction }: HeaderProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 450,
   },
   icon: {
     width: 100,
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject,
     width: "100%",
-    height: 450,
   },
   line: {
     flexGrow: 1,

@@ -23,7 +23,7 @@ export const LoadingLine = () => {
 
   const interpolatedColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: ["#F02E65", "#fbb3c7"],
+    outputRange: ["#F02E65", "#F02E651A"],
   });
 
   return (

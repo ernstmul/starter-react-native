@@ -12,4 +12,9 @@ export const fontStyles = StyleSheet.create({
     fontSize: 14,
     color: "#56565C",
   },
+  bodyMBold: {
+    fontSize: 14,
+    color: "#56565C",
+    fontWeight: 600,
+  },
 });

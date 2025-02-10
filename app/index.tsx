@@ -8,7 +8,7 @@ import { Code } from "@/components/Code";
 import { Logs } from "@/components/Logs";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import bottomSheet from "@gorhom/bottom-sheet/src";
+import { Log } from "@/types/log";
 
 export default function HomeScreen() {
   const [connectionState, setConnectionState] = useState<
@@ -16,6 +16,14 @@ export default function HomeScreen() {
   >("idle");
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [currentSnapIndex, setCurrentSnapIndex] = useState<number>(0);
+  const [logs, setLogs] = useState<Array<Log>>([
+    { date: new Date(), status: 200, method: "GET", path: "/ping" },
+    { date: new Date(), status: 200, method: "GET", path: "/ping" },
+    { date: new Date(), status: 200, method: "GET", path: "/ping" },
+    { date: new Date(), status: 200, method: "GET", path: "/ping" },
+    { date: new Date(), status: 500, method: "GET", path: "/ping" },
+  ]);
+
   const doPing = () => {
     setConnectionState("loading");
 
@@ -88,6 +96,7 @@ export default function HomeScreen() {
             <Logs
               toggleBottomSheet={toggleBottomSheet}
               isOpen={currentSnapIndex > 0}
+              logs={logs}
             />
           </BottomSheetView>
         </BottomSheet>

@@ -1,13 +1,58 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { IconChevronDown } from "@/assets/images/IconChevronDown";
 import { IconChevronUp } from "@/assets/images/IconChevronUp";
+import { Log } from "@/types/log";
+import { Pill } from "@/components/Pill";
 
 interface LogsProps {
   toggleBottomSheet: () => void;
   isOpen: boolean;
+  logs: Array<Log>;
 }
 
-export const Logs = ({ toggleBottomSheet, isOpen }: LogsProps) => {
+export const Logs = ({ toggleBottomSheet, isOpen, logs }: LogsProps) => {
+  const formatDate = (date: Date) => {
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+    console.log(formattedDate);
+    return formattedDate
+      .replace(" at", ",")
+      .replace("AM", "")
+      .replace("PM", "");
+  };
+  const getTable = () => {
+    return (
+      <View style={styles.table}>
+        <View style={{ ...styles.tableRow, ...styles.logTitle }}>
+          <Text style={{ flexGrow: 1 }}>Date</Text>
+          <Text style={{ ...styles.tableCell }}>Status</Text>
+          <Text style={{ ...styles.tableCell }}>Method</Text>
+          <Text style={{ ...styles.tableCell }}>Path</Text>
+        </View>
+        {logs.map((log, index) => {
+          return (
+            <View key={index} style={styles.tableRow}>
+              <Text style={{ flexGrow: 1 }}>{formatDate(log.date)}</Text>
+              <View style={{ ...styles.tableCell }}>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <Pill
+                    status={log.status === 200 ? "success" : "error"}
+                    text={log.status.toString()}
+                  />
+                </View>
+              </View>
+              <Text style={{ ...styles.tableCell }}>{log.method}</Text>
+              <Text style={{ ...styles.tableCell }}>{log.path}</Text>
+            </View>
+          );
+        })}
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.header} onPress={toggleBottomSheet}>
@@ -49,6 +94,7 @@ export const Logs = ({ toggleBottomSheet, isOpen }: LogsProps) => {
               </View>
             </View>
           </View>
+          {getTable()}
         </>
       )}
     </View>
@@ -98,5 +144,18 @@ const styles = StyleSheet.create({
   value: {
     color: "#56565C",
     fontSize: 12,
+  },
+  table: {
+    display: "flex",
+  },
+  tableRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingInline: 16,
+    paddingBlock: 8,
+  },
+  tableCell: {
+    width: 80,
   },
 });

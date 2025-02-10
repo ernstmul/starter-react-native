@@ -103,7 +103,7 @@ export default function HomeScreen() {
         </ScrollView>
         <BottomSheet
           index={0}
-          snapPoints={["50%", "90%"]}
+          snapPoints={[70, "50%", "90%"]}
           enablePanDownToClose={false}
           handleComponent={null}
           ref={bottomSheetRef}

@@ -3,6 +3,7 @@ import { IconChevronDown } from "@/assets/images/IconChevronDown";
 import { IconChevronUp } from "@/assets/images/IconChevronUp";
 import { Log } from "@/types/log";
 import { Pill } from "@/components/Pill";
+import { Code } from "@/components/Code";
 
 interface LogsProps {
   toggleBottomSheet: () => void;
@@ -18,7 +19,6 @@ export const Logs = ({ toggleBottomSheet, isOpen, logs }: LogsProps) => {
       hour: "2-digit",
       minute: "2-digit",
     }).format(date);
-    console.log(formattedDate);
     return formattedDate
       .replace(" at", ",")
       .replace("AM", "")
@@ -56,7 +56,10 @@ export const Logs = ({ toggleBottomSheet, isOpen, logs }: LogsProps) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.header} onPress={toggleBottomSheet}>
-        <Text>Logs</Text>
+        <View style={styles.headerTitle}>
+          <Text style={styles.headerTitleText}>Logs</Text>
+          <Code variant={"primary"}>{logs.length.toString()}</Code>
+        </View>
         {isOpen ? <IconChevronUp /> : <IconChevronDown />}
       </TouchableOpacity>
       {isOpen && (
@@ -109,6 +112,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 16,
+  },
+  headerTitle: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
+  },
+  headerTitleText: {
+    fontWeight: "bold",
   },
   logTitle: {
     paddingInline: 16,

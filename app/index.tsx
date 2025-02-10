@@ -9,6 +9,12 @@ import { Logs } from "@/components/Logs";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Log } from "@/types/log";
+import { AppwriteException, Client } from "appwrite";
+import * as Application from "expo-application";
+
+const client = new Client()
+  .setProject(process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID ?? "")
+  .setEndpoint(process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT ?? "");
 
 export default function HomeScreen() {
   const [connectionState, setConnectionState] = useState<
@@ -16,19 +22,30 @@ export default function HomeScreen() {
   >("idle");
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [currentSnapIndex, setCurrentSnapIndex] = useState<number>(0);
-  const [logs, setLogs] = useState<Array<Log>>([
-    { date: new Date(), status: 200, method: "GET", path: "/ping" },
-    { date: new Date(), status: 200, method: "GET", path: "/ping" },
-    { date: new Date(), status: 200, method: "GET", path: "/ping" },
-    { date: new Date(), status: 200, method: "GET", path: "/ping" },
-    { date: new Date(), status: 500, method: "GET", path: "/ping" },
-  ]);
+  const [logs, setLogs] = useState<Array<Log>>([]);
 
-  const doPing = () => {
+  const doPing = async () => {
     setConnectionState("loading");
-
-    //todo this is debug
-    setTimeout(() => setConnectionState("idle"), 2000);
+    let log: Log;
+    try {
+      await client.ping();
+      log = {
+        date: new Date(),
+        method: "GET",
+        path: "/v1/ping",
+        status: 200,
+      };
+      setConnectionState("success");
+    } catch (err) {
+      log = {
+        date: new Date(),
+        method: "GET",
+        path: "/v1/ping",
+        status: err instanceof AppwriteException ? err.code : 500,
+      };
+      setConnectionState("error");
+    }
+    setLogs([...logs, log]);
   };
 
   const toggleBottomSheet = () => {
